@@ -54,7 +54,7 @@ jobs:
       - name: 📊 Sonar Analysis
         run: >
           mvn -B sonar:sonar
-          -Dsonar.projectKey=olgaarenas22${{ env.ARTIFACT }}
+          -Dsonar.projectKey=olgaarenas22_${{ env.ARTIFACT }}
           -Dsonar.organization=olgaarenas22
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
