@@ -30,6 +30,28 @@ class SearchesTest {
             );
         }
     }
+    static class TestUsersDatabaseNoneImproper extends UsersDatabase {
+        @Override
+        public Stream<User> findAll() {
+            return Stream.of(
+                    new User("A", "OnlyProper", "One",
+                            Arrays.asList(new Fraction(1, 2), new Fraction(3, 4))),
+                    new User("B", "OnlyEqual", "Two",
+                            Arrays.asList(new Fraction(2, 2), new Fraction(-4, -4)))
+            );
+        }
+    }
+    static class TestUsersDatabaseNullsImproper extends UsersDatabase {
+        @Override
+        public Stream<User> findAll() {
+            return Stream.of(
+                    new User("X", "Mixed", "Nulls",
+                            Arrays.asList(null, new Fraction(7, 3), null)),
+                    new User("Y", "AllNulls", "Case",
+                            Arrays.asList(null, null))                      // solo nulls
+            );
+        }
+    }
     @Test
     void testAddition_userFound() {
         Searches searches = new Searches();
@@ -166,6 +188,45 @@ class SearchesTest {
         };
         List<String> result = searches.findUserIdBySomeProperFraction().toList();
         assertEquals(List.of("X"), result);
+    }
+
+    @Test
+    void testSomeImproper_withRealDatabase() {
+        Searches searches = new Searches();
+        List<String> result = searches.findUserFamilyNameBySomeImproperFraction().toList();
+        assertEquals(List.of("Fernandez", "Blanco", "Torres"), result);
+    }
+
+    @Test
+    void testSomeImproper_noneFound_returnsEmpty() {
+        Searches searches = new Searches() {
+            @Override
+            public Stream<String> findUserFamilyNameBySomeImproperFraction() {
+                return new TestUsersDatabaseNoneImproper().findAll()
+                        .filter(user -> user.getFractions().stream()
+                                .filter(java.util.Objects::nonNull)
+                                .anyMatch(Fraction::isImproper))
+                        .map(User::getFamilyName);
+            }
+        };
+        List<String> result = searches.findUserFamilyNameBySomeImproperFraction().toList();
+        assertEquals(List.of(), result);
+    }
+
+    @Test
+    void testSomeImproper_nullFractionsAreIgnored() {
+        Searches searches = new Searches() {
+            @Override
+            public Stream<String> findUserFamilyNameBySomeImproperFraction() {
+                return new TestUsersDatabaseNullsImproper().findAll()
+                        .filter(user -> user.getFractions().stream()
+                                .filter(java.util.Objects::nonNull)
+                                .anyMatch(Fraction::isImproper))
+                        .map(User::getFamilyName);
+            }
+        };
+        List<String> result = searches.findUserFamilyNameBySomeImproperFraction().toList();
+        assertEquals(List.of("Nulls"), result);
     }
 }
 
