@@ -4,7 +4,6 @@ on:
     branches: ['master']
 
 env:
-  REPOSITORY: ${{ github.repository }} # <user>/<repo>
   GHCR_URL: ghcr.io # GitHub Container Registry
 
 jobs:
@@ -12,6 +11,8 @@ jobs:
     name: Build & Push GitHub Package & Deploy on Render Docker Image
     runs-on: ubuntu-22.04
     steps:
+      - name: Lowercase repository name
+        run: echo "REPOSITORY=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v4
         with:
