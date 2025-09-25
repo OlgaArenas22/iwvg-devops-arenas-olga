@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SearchesTest {
+    private final Searches searches = new Searches();
     static class TestUsersDatabaseNullsAndValid extends UsersDatabase {
         @Override
         public Stream<User> findAll() {
@@ -52,6 +53,28 @@ class SearchesTest {
             );
         }
     }
+    static class TestUsersDatabaseEmptyFractions extends UsersDatabase {
+        @Override
+        public Stream<User> findAll() {
+            return Stream.of(new User("E1", "Empty", "User", Collections.emptyList()));
+        }
+    }
+    static class TestUsersDatabaseOnlyNullFractions extends UsersDatabase {
+        @Override
+        public Stream<User> findAll() {
+            return Stream.of(new User("N1", "Nulls", "Only", Arrays.asList(null, null)));
+        }
+    }
+
+    static class TestUsersDatabaseNone extends UsersDatabase {
+        @Override
+        public Stream<User> findAll() {
+            return Stream.of(
+                    new User("A", "No", "Proper", Arrays.asList(new Fraction(2, 2), new Fraction(9, 3))), // igual, impropia
+                    new User("B", "Only", "Improper", Arrays.asList(new Fraction(7, 3), new Fraction(5, 0))) // impropias, infinito
+            );
+        }
+    }
     @Test
     void testAddition_userFound() {
         Searches searches = new Searches();
@@ -74,12 +97,6 @@ class SearchesTest {
         assertThrows(NullPointerException.class,
                 () -> searches.findFractionAdditionByUserId(null));
     }
-    static class TestUsersDatabaseEmptyFractions extends UsersDatabase {
-        @Override
-        public Stream<User> findAll() {
-            return Stream.of(new User("E1", "Empty", "User", Collections.emptyList()));
-        }
-    }
 
     @Test
     void testAddition_userFound_butEmptyFractions_returnsNull() {
@@ -96,12 +113,6 @@ class SearchesTest {
         };
 
         assertNull(searches.findFractionAdditionByUserId("E1"));
-    }
-    static class TestUsersDatabaseOnlyNullFractions extends UsersDatabase {
-        @Override
-        public Stream<User> findAll() {
-            return Stream.of(new User("N1", "Nulls", "Only", Arrays.asList(null, null)));
-        }
     }
 
     @Test
@@ -146,16 +157,6 @@ class SearchesTest {
         Searches searches = new Searches();
         List<String> result = searches.findUserIdBySomeProperFraction().toList();
         assertEquals(List.of("1", "2", "3", "5"), result);
-    }
-
-    static class TestUsersDatabaseNone extends UsersDatabase {
-        @Override
-        public Stream<User> findAll() {
-            return Stream.of(
-                    new User("A", "No", "Proper", Arrays.asList(new Fraction(2, 2), new Fraction(9, 3))), // igual, impropia
-                    new User("B", "Only", "Improper", Arrays.asList(new Fraction(7, 3), new Fraction(5, 0))) // impropias, infinito
-            );
-        }
     }
 
     @Test
@@ -227,6 +228,35 @@ class SearchesTest {
         };
         List<String> result = searches.findUserFamilyNameBySomeImproperFraction().toList();
         assertEquals(List.of("Nulls"), result);
+    }
+
+
+    @Test
+    void testSubtraction_userFound_singleUser() {
+        Fraction result = searches.findFractionSubtractionByUserName("Ana");
+        assertNotNull(result);
+        assertEquals(22, result.getNumerator());
+        assertEquals(60, result.getDenominator());
+    }
+
+    @Test
+    void testSubtraction_userFound_multipleUsers_sameName() {
+        Fraction result = searches.findFractionSubtractionByUserName("Paula");
+        assertNotNull(result);
+        assertEquals(0, result.getNumerator());
+        assertEquals(0, result.getDenominator());
+    }
+
+    @Test
+    void testSubtraction_userNotFound_returnsNull() {
+        Fraction result = searches.findFractionSubtractionByUserName("Daniela");
+        assertNull(result);
+    }
+
+    @Test
+    void testSubtraction_nullName_throwsNPE() {
+        assertThrows(NullPointerException.class,
+                () -> searches.findFractionSubtractionByUserName(null));
     }
 }
 
