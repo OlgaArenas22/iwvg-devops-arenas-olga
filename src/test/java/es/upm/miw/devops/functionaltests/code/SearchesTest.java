@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SearchesTest {
-    private final Searches searches = new Searches();
     static class TestUsersDatabaseNullsAndValid extends UsersDatabase {
         @Override
         public Stream<User> findAll() {
@@ -233,6 +232,7 @@ class SearchesTest {
 
     @Test
     void testSubtraction_userFound_singleUser() {
+        Searches searches = new Searches();
         Fraction result = searches.findFractionSubtractionByUserName("Ana");
         assertNotNull(result);
         assertEquals(22, result.getNumerator());
@@ -241,6 +241,7 @@ class SearchesTest {
 
     @Test
     void testSubtraction_userFound_multipleUsers_sameName() {
+        Searches searches = new Searches();
         Fraction result = searches.findFractionSubtractionByUserName("Paula");
         assertNotNull(result);
         assertEquals(0, result.getNumerator());
@@ -249,12 +250,14 @@ class SearchesTest {
 
     @Test
     void testSubtraction_userNotFound_returnsNull() {
+        Searches searches = new Searches();
         Fraction result = searches.findFractionSubtractionByUserName("Daniela");
         assertNull(result);
     }
 
     @Test
     void testSubtraction_nullName_throwsNPE() {
+        Searches searches = new Searches();
         assertThrows(NullPointerException.class,
                 () -> searches.findFractionSubtractionByUserName(null));
     }
