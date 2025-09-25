@@ -14,7 +14,7 @@
 
     <groupId>es.upm.miw</groupId>
     <artifactId>iwvg-devops-arenas-olga</artifactId>
-    <version>5.2.0-Release</version>
+    <version>5.2.1-Release</version>
     <packaging>jar</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
     <url>http://github.com/miw-upm/${project.artifactId}</url>
