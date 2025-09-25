@@ -12,7 +12,7 @@
 ### Estado del código
 [![CI](https://github.com/OlgaArenas22/iwvg-devops-arenas-olga/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/OlgaArenas22/iwvg-devops-arenas-olga/actions/workflows/continuous-integration.yml)
 [![CI](https://github.com/OlgaArenas22/iwvg-devops-arenas-olga/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/OlgaArenas22/iwvg-devops-arenas-olga/actions/workflows/continuous-integration.yml)
-[![Render broken](https://iwvg-devops-latest.onrender.com/version-badge)](https://iwvg-devops-latest.onrender.com/swagger-ui.html)
+[![Render broken](https://iwvg-devops-arenas-olga.onrender.com/version-badge)](https://iwvg-devops-arenas-olga.onrender.com/swagger-ui.html)
 
 
 ### Tecnologías necesarias
